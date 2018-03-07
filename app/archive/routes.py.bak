@@ -1,0 +1,60 @@
+from app import app
+from app.gw2data4 import *
+from app.guildstats import * 
+
+@app.route('/')
+@app.route('/index')
+
+def index():
+	return "Hello World!"
+
+@app.route('/hw')
+def hw():
+	a = guildstats()
+	a.gthreads()
+	logging.info(threading.enumerate())
+	guildy = {}
+	
+	ranks = a.guildcall("ranks")
+	for rank in ranks: 
+		guildy[rank['id']] = a.bombling(a.called['members'],rank['id'])
+	logging.info(guildy.keys())
+	
+	Firey = a.member_rank(guildy['Fiery Bomb'])
+	Bomb = a.member_rank(guildy['Bomb'])
+	
+	logging.debug(Firey)
+	logging.debug(Bomb)
+	
+	style = "<style>table, {border: 1px solid black; } #firey{position: absolute; right:0; text-align: center;} tr:hover {background-color:#f5f5f5;}</style>"
+	script ="""<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>"""
+	lst2string = lambda x: " ".join(x)
+	message = """<!DOCTYPE html>
+		<head>{0!s}{1!s}</head>
+		<body>
+		<article>
+		<table border=1 class="firey" id="firey">
+		<thead>
+		<tr>
+		<th>Name</th>
+		<th>Joined</th>
+		<th>Tenure (DAYS)</th> 
+		</tr>
+		</thead>
+		<tbody>
+		{2!s}
+		</tbody>
+		</table>
+		</article>
+		<article>
+		<table border=1>
+		<th>Name</th>
+		<th>Joined</th>
+		<th>Tenure (DAYS)</th> 
+		{3!s}
+		</table>
+		</article>
+		</p>
+		</body>
+		</html>""".format(script, style, lst2string(Firey), lst2string(Bomb))
+	return message

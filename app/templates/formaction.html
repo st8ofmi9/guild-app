@@ -1,0 +1,90 @@
+{% extends "form.html" %}
+{% block content %}
+<head>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+{% macro tab_create(b, caption) %}
+<table>
+<caption> {{ caption }} </caption>
+<thead>
+		<tr>
+         <th>#</th>   
+         <th>Name</th>
+		 <th>Joined</th>
+         <th>Tenure (Days)</th> 
+		</tr>
+</thead>
+<tbody>
+{% for table in b %}
+
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ table.name }}</td>
+<td>{{ table.joined }}</td>
+<td>{{ table.days_in_guild }}</td>
+</tr>
+
+{% endfor %}
+</table>
+{% endmacro %}
+
+
+{% macro stash_table(b, tabledata) %}
+<table>
+{% if tabledata[0]['operation'] == "withdraw" %}
+<caption> Withdrawals </caption>
+{% elif tabledata[0]['operation'] == "deposit" %}
+<caption> Deposits </caption>
+{% else %}
+{% endif %}
+<thead>
+		<tr>
+         <th>#</th>   
+         <th>Name</th>
+		 <th>Item</th>
+         <th>Date</th> 
+		</tr>
+</thead>
+<tbody>
+{% for table in tabledata %}
+{% if loop.index <= b and table.coins == 0 %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ table.user }}</td>
+<td>{{ table.count }} {{ table.item_name }}</td>
+<td>{{ table.time }}</td>
+</tr>
+{% elif loop.index <= b and table.item_name == "GOLD" %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ table.user }}</td>
+<td>{{ table.coins / 10000 }} {{ table.item_name }}</td>
+<td>{{ table.time }}</td>
+</tr>
+{% else %}
+{% endif %}
+{% endfor %}
+</table>
+{% endmacro %}
+
+
+</head>
+  <body>
+    <article>
+    {{ stash_table(10, Table3) }}
+    </article>
+    <article>
+    {{ stash_table(10, Table4) }}
+    </article>
+    <article>
+    {{ tab_create(Bombling, "Bombling") }}
+	{{ tab_create(Bomb,"Bomb") }}
+	{{ tab_create(FlashBomb,"Flash Bomb") }}
+	{{ tab_create(FieryBomb, "Fiery Bomb") }}
+	{{ tab_create(StrangeBomb, "Strange Bomb") }}
+	{{ tab_create(FizzlingBomb, "Fizzling Bomb") }}
+	{{ tab_create(RogueBomb, "Rogue Bomb") }} 
+    </article>
+    </body>
+</html>
+{% endblock %}
