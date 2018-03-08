@@ -7,7 +7,7 @@ from pathlib import Path
 
 class gw2data:
 
-    loglocation = "/home/pi/gw2data.log"
+    loglocation = "gw2data.log"
     lfmt = "%(asctime)s %(message)s"
     dfmt = "%m/%d/%Y %I:%M:%S %p"
     llvl = logging.DEBUG
