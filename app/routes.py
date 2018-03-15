@@ -58,12 +58,24 @@ def hw():
 
 @app.route('/test')
 def test():
-	#form = LoginForm()
-	username = request.cookies.get('username')
-	# use cookies.get(key) instead of cookies[key] to not get a
-	# KeyError if the cookie is missing.
-	print(username)
-	return render_template('form.html', title='Button Test', form=LoginForm(td=username))
+	a = memberobj()
+	a.gthreads()
+	a.unpack_and_org(*a.called['log'])
+	guildy = {}
+	for rank in a.called['ranks']: 
+			guildy[rank['id']] = a.bombling(a.called['members'],rank['id'])
+			
+	dict = {
+	'Bombling':guildy['Bombling'],
+	'Bomb':guildy['Bomb'],
+	'FlashBomb':guildy['Flash Bomb'],
+	'FieryBomb':guildy['Fiery Bomb'],
+	'FizzlingBomb':guildy['Fizzling Bomb'],
+	'RogueBomb':guildy['Rogue Bomb'],
+	'StrangeBomb':guildy['Strange Bomb']
+	}
+	
+	return render_template('test.html', **dict)
 	
 @app.route('/members')
 def members():

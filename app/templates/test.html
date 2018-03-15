@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    </script>
+
+   {% macro tab_create(b, caption) %}
+   <table id={{ caption }}>
+      <caption> {{ caption }} </caption>
+      <tbody>
+         {% for table in b %}
+         <tr>
+            <td>{{ table.name }}</td>
+            <td>{{ table.joined }}</td>
+            <td>{{ table.days_in_guild }}</td>
+         </tr>
+         {% endfor %}
+   </table>
+   {% endmacro %}	
+	
+
+  </head>
+
+  <body>
+    <!--Div that will hold the dashboard-->
+    <div id="dashboard_div">
+      <!--Divs that will hold each control and chart-->
+      <div id="filter_div"></div>
+      <div id="chart_div"></div>
+	<div id="table-wrapper">
+      <div id="table_div">
+         <article>
+            {{ tab_create(Bombling, "Bombling") }}
+            {{ tab_create(Bomb,"Bomb") }}
+            {{ tab_create(FlashBomb,"Flash Bomb") }}
+            {{ tab_create(FieryBomb, "Fiery Bomb") }}
+            {{ tab_create(StrangeBomb, "Strange Bomb") }}
+            {{ tab_create(FizzlingBomb, "Fizzling Bomb") }}
+            {{ tab_create(RogueBomb, "Rogue Bomb") }} 
+         </article>
+      </div>
+    </div>
+   <script type = "text/javascript" src = "{{ url_for('static', filename = 'dashboard.js') }}" >
+   </script>
+  </body>
+</html>
