@@ -13,6 +13,7 @@ function drawDashboard() {
 
     // Create our data table.
     data = google.visualization.arrayToDataTable(chartdata());
+    //data = Array(chartdata());
 
         // Create a dashboard.
         var dashboard = new google.visualization.Dashboard(
@@ -51,8 +52,11 @@ function drawDashboard() {
                 'allowHtml': true,
 
             },
+            'cssClassNames':{
+            'tableCell': 'Nested-Div'
+            },
             'view': {
-                'columns': [0, 2]
+                'columns': [2, 3, 4]
             }
         });
 
@@ -79,7 +83,8 @@ function chartdata() {
             xnames.push("<td>"+xarray[step][0]+"</td>");
 
         }
-        return [key, xarray.length, "<table>"+xnames.toString()+"</table>"]//.replace(/,/g,)];
+        //return [key, xarray.length, "<table>"+xnames.toString().replace(/,/g,"")+"</table>"]//.replace(/,/g,)];
+        return [key, xarray.length];
     }
 
     var art = document.querySelectorAll('table')
@@ -88,21 +93,33 @@ function chartdata() {
                 console.log(art.item(i));
                 if (art.item(i).attributes.class !== undefined || art.item(i).attributes.id === undefined) {}
                 else if (datarray.length <= 0) {
-                    datarray = [
-                        ["Rank", "Number of Members", "Members"], ...datarray
-                    ];
+                    datarray.unshift(["Rank", "Number of Members", "Members", "Date", "Tenure"])
                     i--;
                 } else {
                     console.log(art.item(i).id);
                     var curr_item = "#" + art.item(i).id;
                     console.log("Current Item is:" + curr_item);
                     console.log(test(curr_item));
-                    datarray = [...datarray, test(curr_item)];
+                    keyValues = test(curr_item)
+
+                    for(var things of xarray)
+                    {
+                    datarray.push([keyValues[0], "", things[0], things[1], things[2]]);
+                    }
+
 
                 }
             } catch (TypeError) {}
 
+
         }
+
+var ranks = ["#Rogue", "#Strange", "#Bomb", "#Bombling","#Fiery", "#Flash", "#Fizzling"]
+for (var rank of ranks)
+{
+rankData = test(rank)
+datarray.push([rankData[0],rankData[1], "", "", ""])
+}
 
         return datarray;
 
