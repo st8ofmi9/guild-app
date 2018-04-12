@@ -13,7 +13,7 @@ function drawDashboard() {
 
     // Create our data table.
     data = google.visualization.arrayToDataTable(chartdata());
-    //data = Array(chartdata());
+
 
         // Create a dashboard.
         var dashboard = new google.visualization.Dashboard(
@@ -28,15 +28,32 @@ function drawDashboard() {
           }
         });
 
+
+    // Create a range slider, passing some options
+    var start_date = new Date(2016, 7, 1)
+    var dateRangeSlider = new google.visualization.ControlWrapper({
+            'controlType': 'DateRangeFilter',
+            'containerId': 'dateFilter_div',
+            'state':{'lowValue': start_date },
+            'options': {
+                'filterColumnLabel': 'Date',
+                'minValue': 1469937600000,
+                'ui': {orientation: 'vertical'},
+
+          }
+        });
+
     // Create a pie chart, passing some options
     var pieChart = new google.visualization.ChartWrapper({
             'chartType': 'PieChart',
             'containerId': 'chart_div',
             'options': {
-                'width': '100%',
+                'width': '30px',
                 'height': '100%',
-                'pieSliceText': 'value',
-                'legend': 'right'
+                'pieSliceText': 'percentage',
+                'backgroundColor.stroke': 'black',
+                'chartArea': {left:0,top:10,bottom:10,width:'1247px',height:'1247px'},
+                'legend': {position: 'right', textStyle: {color: 'blue', fontSize: 16}}
             },
             'view': {
                 'columns': [0, 1]
@@ -50,6 +67,8 @@ function drawDashboard() {
                 'width': '100%',
                 'height': '100%',
                 'allowHtml': true,
+                'page': 'enable',
+                'pageSize': 10
 
             },
             'cssClassNames':{
@@ -63,7 +82,7 @@ function drawDashboard() {
     // Establish dependencies, declaring that 'filter' drives 'pieChart',
     // so that the pie chart will only display entries that are let through
     // given the chosen slider range.
-    dashboard.bind(donutRangeSlider, [pieChart, table_1ists]);
+    dashboard.bind(donutRangeSlider, [pieChart, table_1ists]).bind(dateRangeSlider, [table_1ists]);
 
     // Draw the dashboard.
     dashboard.draw(data);
@@ -83,7 +102,6 @@ function chartdata() {
             xnames.push("<td>"+xarray[step][0]+"</td>");
 
         }
-        //return [key, xarray.length, "<table>"+xnames.toString().replace(/,/g,"")+"</table>"]//.replace(/,/g,)];
         return [key, xarray.length];
     }
 
@@ -104,7 +122,8 @@ function chartdata() {
 
                     for(var things of xarray)
                     {
-                    datarray.push([keyValues[0], "", things[0], things[1], things[2]]);
+                    var g_date = new Date(things[1])
+                    datarray.push([keyValues[0], "", things[0], g_date, things[2]]);
                     }
 
 
@@ -114,7 +133,7 @@ function chartdata() {
 
         }
 
-var ranks = ["#Rogue", "#Strange", "#Bomb", "#Bombling","#Fiery", "#Flash", "#Fizzling"]
+var ranks = ["#Bombling", "#Bomb", "#Flash", "#Fiery", "#Strange", "#Fizzling", "#Rogue"]
 for (var rank of ranks)
 {
 rankData = test(rank)
