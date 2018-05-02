@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% macro tab_create(b) %}
+   <table>
+       <tbody>
+         {% for table in b %}
+         <tr>
+            <td>{{ table.invitied_by }}</td>
+            <td>{{ table.count }}</td>
+         </tr>
+         {% endfor %}
+   </table>
+   {% endmacro %}
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ tab_create(data) }}
+</body>
+</html>

@@ -1,8 +1,9 @@
 from app import app
 from app.memberobject import *
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, jsonify
 from app import app
 from app.forms import LoginForm
+import sqlite3
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -103,3 +104,39 @@ def members():
     }
 
     return render_template('tables.html', **dict)
+
+
+@app.route('/recruit_stats')
+def rt():
+    a = memberobj()
+    a.gthreads()
+    a.unpack_and_org(*a.called['log'])
+
+    def dict_factory(cursor, row):
+       d = {}
+       for idx, col in enumerate(cursor.description):
+           d[col[0]] = row[idx]
+       return d
+
+    conn = sqlite3.connect('guild.db')
+    conn.row_factory = dict_factory
+    gdb = conn.cursor()
+
+    # Create table if doesn't exist
+    try:
+        gdb.execute('''CREATE TABLE invited (invitied_by text, date text, user TEXT UNIQUE ON CONFLICT REPLACE)''')
+    except:
+        print("Table Already Exists")
+        pass
+    #
+    for invitees in a.invited:
+        gdb.execute("INSERT INTO invited VALUES ('{invited_by}', '{time}', '{user}')".format(**invitees))
+
+    conn.commit()
+    gdb.execute("Select invitied_by, count(invitied_by) as count from invited group by invitied_by")
+    data = gdb.fetchall()
+
+    for q in data:
+        print(q)
+
+    return render_template('recruit_stats.html', data=data)
